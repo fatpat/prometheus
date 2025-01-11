@@ -149,8 +149,9 @@ var Functions = map[string]*Function{
 	},
 	"delta": {
 		Name:       "delta",
-		ArgTypes:   []ValueType{ValueTypeMatrix},
+		ArgTypes:   []ValueType{ValueTypeMatrix, ValueTypeScalar},
 		ReturnType: ValueTypeVector,
+		Variadic:   1,
 	},
 	"deriv": {
 		Name:       "deriv",
@@ -221,8 +222,9 @@ var Functions = map[string]*Function{
 	},
 	"increase": {
 		Name:       "increase",
-		ArgTypes:   []ValueType{ValueTypeMatrix},
+		ArgTypes:   []ValueType{ValueTypeMatrix, ValueTypeScalar},
 		ReturnType: ValueTypeVector,
+		Variadic:   1,
 	},
 	"info": {
 		Name:         "info",
@@ -322,8 +324,9 @@ var Functions = map[string]*Function{
 	},
 	"rate": {
 		Name:       "rate",
-		ArgTypes:   []ValueType{ValueTypeMatrix},
+		ArgTypes:   []ValueType{ValueTypeMatrix, ValueTypeScalar},
 		ReturnType: ValueTypeVector,
+		Variadic:   1,
 	},
 	"resets": {
 		Name:       "resets",

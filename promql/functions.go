@@ -69,7 +69,16 @@ func funcTime(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper)
 // It calculates the rate (allowing for counter resets if isCounter is true),
 // extrapolates if the first/last sample is close to the boundary, and returns
 // the result as either per-second (if isRate is true) or overall.
+// 2nd argument is optional and allow to disable extrapolation if zero or negative (enabled by default)
 func extrapolatedRate(vals []parser.Value, args parser.Expressions, enh *EvalNodeHelper, isCounter, isRate bool) (Vector, annotations.Annotations) {
+
+	doExtrapolation := true
+	if len(args) > 1 {
+		doExtrapolation = vals[1].(Vector)[0].F > 0
+		fmt.Printf("****** Disable Extrapolation\n")
+		fmt.Printf("vals=%v\n", vals)
+	}
+
 	ms := args[0].(*parser.MatrixSelector)
 	vs := ms.VectorSelector.(*parser.VectorSelector)
 	var (
@@ -122,6 +131,14 @@ func extrapolatedRate(vals []parser.Value, args parser.Expressions, enh *EvalNod
 	default:
 		// TODO: add RangeTooShortWarning
 		return enh.Out, annos
+	}
+
+	if !doExtrapolation {
+		if isRate {
+			resultFloat /= float64(lastT - firstT) / 1000
+		}
+		fmt.Printf("result=%v\n", resultFloat)
+		return append(enh.Out, Sample{F: resultFloat, H: resultHistogram}), annos
 	}
 
 	// Duration between first/last samples and boundary of range.

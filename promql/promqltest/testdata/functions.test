@@ -138,6 +138,24 @@ eval instant at 50m increase(http_requests_total[100m])
 	{path="/dings"} 105
 	{path="/bumms"} 101
 
+eval instant at 50m increase(http_requests_total[100m], 0)
+	{path="/foo"}   100
+	{path="/bar"}   162
+	{path="/dings"} 100
+	{path="/bumms"} 100
+
+eval instant at 60m increase(http_requests_total[100m])
+	{path="/foo"}   105
+	{path="/bar"}   196.36363636363635
+	{path="/dings"} 110
+	{path="/bumms"} 106
+
+eval instant at 60m increase(http_requests_total[100m], 0)
+	{path="/foo"}   100
+	{path="/bar"}   180
+	{path="/dings"} 100
+	{path="/bumms"} 100
+
 clear
 
 # Test for increase() with counter reset.
@@ -154,8 +172,15 @@ clear
 
 # Tests for rate().
 load 5m
+	testcounter_no_reset_total	0+300x10
 	testcounter_reset_middle_total	0+27x4 0+27x5
 	testcounter_reset_end_total  	0+10x9 0 10
+
+eval instant at 70m rate(testcounter_no_reset_total[100m])
+	{} 0.525
+
+eval instant at 70m rate(testcounter_no_reset_total[100m], 0)
+	{} 1
 
 # Counter resets at in the middle of range are handled correctly by rate().
 eval instant at 50m rate(testcounter_reset_middle_total[50m])
@@ -239,6 +264,14 @@ load 5m
 	http_requests_mix{path="/foo"} 0 50 100 {{schema:0 sum:0 count:0 buckets:[0 0 0] counter_reset_hint:gauge}} {{schema:0 sum:1 count:2 buckets:[1 1 1] counter_reset_hint:gauge}}
 
 eval instant at 20m delta(http_requests[20m])
+	{path="/foo"} 200
+	{path="/bar"} -200
+
+eval instant at 30m delta(http_requests[40m])
+	{path="/foo"} 250
+	{path="/bar"} -250
+
+eval instant at 30m delta(http_requests[40m], 0)
 	{path="/foo"} 200
 	{path="/bar"} -200
 

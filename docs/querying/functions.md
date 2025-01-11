@@ -136,12 +136,14 @@ month for each of the given times in UTC. Returned values are from 28 to 31.
 
 ## `delta()`
 
-`delta(v range-vector)` calculates the difference between the
+`delta(v range-vector, extrapolate=1 scalar)` calculates the difference between the
 first and last value of each time series element in a range vector `v`,
 returning an instant vector with the given deltas and equivalent labels.
-The delta is extrapolated to cover the full time range as specified in
+By default, the delta is extrapolated to cover the full time range as specified in
 the range vector selector, so that it is possible to get a non-integer
-result even if the sample values are all integers.
+result even if the sample values are all integers. To disable extrapolation set the
+`extrapolate` argument to 0 and only the values in the range vector selector
+will be used to calculate its difference.
 
 The following example expression returns the difference in CPU temperature
 between now and 2 hours ago:
@@ -437,13 +439,14 @@ equivalent labels.
 
 ## `increase()`
 
-`increase(v range-vector)` calculates the increase in the
+`increase(v range-vector, extrapolate=1 scalar)` calculates the increase in the
 time series in the range vector. Breaks in monotonicity (such as counter
-resets due to target restarts) are automatically adjusted for. The
+resets due to target restarts) are automatically adjusted for. By default, the
 increase is extrapolated to cover the full time range as specified
 in the range vector selector, so that it is possible to get a
 non-integer result even if a counter increases only by integer
-increments.
+increments. To disable extrapolation set the `extrapolate` argument to 0 and only the
+values in the range vector selector will be used to calculate its increase.
 
 The following example expression returns the number of HTTP requests as measured
 over the last 5 minutes, per time series in the range vector:
@@ -660,11 +663,13 @@ the slope and offset value calculated will be `NaN`.
 
 ## `rate()`
 
-`rate(v range-vector)` calculates the per-second average rate of increase of the
+`rate(v range-vector, extrapolate=1 scalar)` calculates the per-second average rate of increase of the
 time series in the range vector. Breaks in monotonicity (such as counter
-resets due to target restarts) are automatically adjusted for. Also, the
+resets due to target restarts) are automatically adjusted for. By default, the
 calculation extrapolates to the ends of the time range, allowing for missed
 scrapes or imperfect alignment of scrape cycles with the range's time period.
+To disable extrapolation set the `extrapolate` argument to 0 and only the values
+in the range vector selector will be used to calculate its rate.
 
 The following example expression returns the per-second rate of HTTP requests as measured
 over the last 5 minutes, per time series in the range vector:
